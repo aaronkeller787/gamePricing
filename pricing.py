@@ -1,29 +1,40 @@
 import requests
 from constants import key
-from pprint import pprint
 
+def gameUrls():
 
-def getGames():
+    games = []
+    urlList = []
+    originalNames = []
+
+    file = open('games.txt', 'r')
+    for f in file:
+        names = f.strip()
+        originalNames.append(names)
+        gameName = ''.join(f.split()).strip().lower()
+        games.append(gameName)
+
+    for g in games:
+        url = "https://api.isthereanydeal.com/v01/game/prices/?key=bb30d49c555921023d021eb8c8f5a314ca37655e&plains={}&country=US&shops=steam".format(g) 
+        urlList.append(url)
+
+    checkPrices(games, urlList, originalNames) 
+
+def checkPrices(games, urlList, originalNames):
 
     allPrices = {}
+    count = 0
 
-    game = input('Please enter in the game name to check pricing: ')
-    gameName = ''.join(game.split()).lower()
+    for u in urlList:
+        
+        response = requests.get(u)
+        data = response.json()
+        currentPrice = (data['data'][games[count]]['list'][0]['price_new'])
+            
+        allPrices = {originalNames[count]: currentPrice}
 
-    url = f"https://api.isthereanydeal.com/v01/game/prices/?key={key}&plains={gameName}&country=US&shops=steam"
+        count+=1
 
-    response = requests.get(url)
+        print(allPrices)
 
-    data = response.json()
-    currentPrice = (data['data'][gameName]['list'][0]['price_new'])
-    print(game.title() + " is currently: " + f"${currentPrice}")
-
-
-    allPrices[game.title()] = currentPrice
-
-    print(allPrices)
-
-
-#pprint(data)
-
-getGames()
+gameUrls()
