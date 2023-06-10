@@ -15,7 +15,7 @@ def gameUrls():
         games.append(gameName)
 
     for g in games:
-        url = "https://api.isthereanydeal.com/v01/game/prices/?key=bb30d49c555921023d021eb8c8f5a314ca37655e&plains={}&country=US&shops=steam".format(g) 
+        url = f"https://api.isthereanydeal.com/v01/game/prices/?key={key}&plains={g}&country=US&shops=steam"
         urlList.append(url)
 
     checkPrices(games, urlList, originalNames) 
@@ -37,4 +37,5 @@ def checkPrices(games, urlList, originalNames):
 
         print(allPrices)
 
-gameUrls()
+if __name__ == "__main__":
+    gameUrls()
