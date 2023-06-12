@@ -1,5 +1,9 @@
 import requests
-from constants import key
+import smtplib
+import os
+from email.message import EmailMessage
+
+from constants import key, sender, recipients
 
 def gameUrls():
 
@@ -22,20 +26,47 @@ def gameUrls():
 
 def checkPrices(games, urlList, originalNames):
 
-    allPrices = {}
     count = 0
 
     for u in urlList:
-        
+
         response = requests.get(u)
         data = response.json()
         currentPrice = (data['data'][games[count]]['list'][0]['price_new'])
-            
         allPrices = {originalNames[count]: currentPrice}
-
         count+=1
+        
+        writeToFile(allPrices)
 
-        print(allPrices)
+def writeToFile(allPrices):
+
+    with open('gameprices.txt', 'a') as f:
+        for k, v in allPrices.items(): 
+            f.write(f'{k}: {v}\n')
+
+def sendEmail():
+
+    with open('gameprices.txt') as fp:
+        msg = EmailMessage()
+        msg.set_content(fp.read())
+        
+    msg['Subject'] = 'Game Prices'
+    msg['From'] = sender
+    msg['To'] = recipients
+
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
+
+    cleanup()
+
+def cleanup():
+    
+    if os.path.exists('gameprices.txt'):
+        os.remove('gameprices.txt')
+    else:
+        pass
 
 if __name__ == "__main__":
     gameUrls()
+    sendEmail()
