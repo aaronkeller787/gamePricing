@@ -1,66 +1,92 @@
-gamePricing
+# gamePricing
 
-A Python script that uses the IsThereAnyDeal.com API to monitor current game prices and email price updates.
+This project uses the **IsThereAnyDeal.com API** to extract game pricing data from an external source, transform game names into a format compatible with the API, and deliver the resulting pricing information through email.
 
-Overview
+The script is designed to run automatically using Linux `cron`.
 
-gamePricing reads a list of game names from games.txt, converts those names into the URL format required by IsThereAnyDeal.com, and generates the necessary URLs to retrieve pricing information.
+## 🚀 Project Approach
 
-The script then checks the current price of each game and emails the game name along with its current price.
+### 📚 1. Information Gathering
 
-The project is designed to run automatically on a schedule using cron.
+```text
+Created a list of games to monitor and stored them in a text file.
 
-How It Works
+The script reads each game name from games.txt and prepares the
+information for use with the IsThereAnyDeal.com API.
+```
 
-The workflow is:
+### 🧩 2. Data Transformation
 
-Read game names from games.txt.
-Convert game names into the URL convention used by IsThereAnyDeal.com.
-Generate the required API/website URLs.
-Query the current pricing information.
-Extract the game name and current price.
-Email the results.
-Run automatically on a scheduled cron job.
-Requirements
-Python 3
-IsThereAnyDeal.com API access
-Python virtual environment
-Email/SMTP configuration
-Linux system with cron for scheduled execution
-Running Manually
+```text
+Game names are transformed into the URL convention required by
+IsThereAnyDeal.com.
 
-The script can be run manually using the Python interpreter from the virtual environment:
+The formatted names are then used to generate the URLs required
+to retrieve pricing information for each game.
+```
 
-/path/to/gamePricing/.venv/bin/python /path/to/gamePricing/example.py
-Scheduling
+### 🛠️ 3. Data Extraction
 
-The script can be scheduled to run every day at 7:00 AM using cron.
+```text
+Generated URLs are used to retrieve current pricing information
+from IsThereAnyDeal.com.
 
-Open the user's crontab:
+The script extracts the relevant game name and current price
+from the returned data.
+```
 
-crontab -e
+### 📧 4. Output
 
-Add:
+```text
+The extracted pricing information is formatted into a simple
+report containing the game name and current price.
 
+The report is then sent via email.
+```
+
+### ⏰ 5. Automation
+
+```text
+The script is executed automatically each morning using Linux cron.
+
+Cron Schedule:
 0 7 * * * /path/to/directory/bin/pythonversion /path/to/directory/example.py
 
-For a virtual environment, this would typically look similar to:
+This runs the script daily at 7:00 AM.
+```
 
-0 7 * * * /path/to/gamePricing/.venv/bin/python /path/to/gamePricing/example.py
+## 🔧 Python Libraries Used
 
-This runs the script every day at 7:00 AM.
+```text
+requests — for communicating with the IsThereAnyDeal.com API.
+```
 
-Example Output
+## 📄 Input
 
-The resulting email contains the current price for each monitored game.
+Game names are stored in `games.txt`, with one game per line.
 
-Example:
+```text
+Cyberpunk 2077
+Baldur's Gate 3
+Stardew Valley
+```
 
+## 📤 Output
+
+The script emails the current pricing information for the games being monitored.
+
+```text
 Cyberpunk 2077 - $XX.XX
 Baldur's Gate 3 - $XX.XX
 Stardew Valley - $XX.XX
-Purpose
+```
 
-This project demonstrates using a web API, processing external data, automating repetitive tasks, and delivering the resulting information through email.
+## 🐧 Environment
 
-It also demonstrates how a Python script can be combined with Linux cron to create a scheduled automation workflow.
+The project uses a Python virtual environment to isolate its dependencies.
+
+The script can be executed manually with:
+
+```bash
+/path/to/directory/bin/pythonversion /path/to/directory/example.py
+```
